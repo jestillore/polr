@@ -17,7 +17,15 @@ class LinkFactory {
         * @param boolean $secret_ending
         * @return string
         */
-        $short_url = env('APP_PROTOCOL') . env('APP_ADDRESS') . '/' . $link_ending;
+
+        if (env('APP_DYNAMIC_LINK')) {
+            $request = app('request');
+            $host = $request->getScheme() . '://' . $request->getHost() . '/';
+        } else {
+            $host = env('APP_PROTOCOL') . env('APP_ADDRESS') . '/';
+        }
+
+        $short_url = $host . $link_ending;
 
         if ($secret_ending) {
             $short_url .= '/' . $secret_ending;
